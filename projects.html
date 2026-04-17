@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillX — Project Hub</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .projects-hero {
+      background: linear-gradient(135deg, rgba(0,229,255,0.08), rgba(123,47,247,0.12));
+      border: 1px solid rgba(0,229,255,0.12);
+      border-radius: var(--radius-xl);
+      padding: 32px; margin-bottom: 28px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;
+      position: relative; overflow: hidden;
+    }
+    .projects-hero::before {
+      content: '🚀';
+      position: absolute; right: 40px; top: 50%; transform: translateY(-50%);
+      font-size: 90px; opacity: 0.06;
+    }
+
+    .summary-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg-glass); border: 1px solid var(--border-dim);
+      border-radius: var(--radius-full); padding: 8px 16px;
+      font-size: 13px; font-weight: 500;
+    }
+
+    .proj-tag-input {
+      background: var(--bg-glass); border: 1px solid var(--border-dim);
+      border-radius: var(--radius-md); color: var(--text-primary);
+      padding: 12px 16px; font-size: 14px; width: 100%;
+    }
+    .proj-tag-input:focus { outline: none; border-color: var(--border-glow); }
+
+    @media (max-width:600px) {
+      .summary-pills { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-orbs"></div>
+  <div class="bg-grid"></div>
+
+  <!-- Page Loader -->
+  <div class="page-loader">
+    <div class="brand-icon" style="width:52px;height:52px;border-radius:14px;font-size:24px;">⚡</div>
+    <div class="spinner"></div>
+  </div>
+
+  <div class="app-layout">
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <div class="brand-icon">⚡</div>
+          <div>
+            <div class="brand-name">SkillX</div>
+            <div class="brand-tagline">Skill Economy</div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Main</span>
+        <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <a href="skills.html" class="nav-item"><i class="fa-solid fa-code-branch"></i> Skill Marketplace<span class="nav-badge">8</span></a>
+        <a href="projects.html" class="nav-item active"><i class="fa-solid fa-diagram-project"></i> Project Hub<span class="nav-badge">6</span></a>
+        <span class="nav-section-label">Account</span>
+        <a href="#" class="nav-item" onclick="showToast('Coming soon 🛠️','info');return false;"><i class="fa-regular fa-user"></i> My Profile</a>
+        <a href="#" class="nav-item" onclick="showToast('Coming soon 🛠️','info');return false;"><i class="fa-solid fa-wallet"></i> SKX Wallet</a>
+        <a href="#" class="nav-item" onclick="showToast('Coming soon 🛠️','info');return false;"><i class="fa-regular fa-bell"></i> Notifications<span class="nav-badge">3</span></a>
+        <span class="nav-section-label">System</span>
+        <a href="#" class="nav-item" onclick="showToast('Coming soon 🛠️','info');return false;"><i class="fa-solid fa-sliders"></i> Settings</a>
+        <a href="index.html" class="nav-item" onclick="sessionStorage.clear();"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" style="background:var(--grad-primary);">AR</div>
+          <div class="user-info">
+            <div class="user-name">Alex Rivera</div>
+            <div class="user-role">Full-Stack Dev</div>
+          </div>
+          <i class="fa-solid fa-ellipsis user-arrow"></i>
+        </div>
+      </div>
+    </aside>
+    <div class="sidebar-overlay"></div>
+
+    <!-- ── Main Content ── -->
+    <main class="main-content">
+      <div class="mobile-topbar">
+        <button class="hamburger"><i class="fa-solid fa-bars"></i></button>
+        <div class="brand-logo">
+          <div class="brand-icon" style="width:30px;height:30px;font-size:14px;border-radius:8px;">⚡</div>
+          <span class="brand-name" style="font-size:16px;">SkillX</span>
+        </div>
+        <div class="icon-btn"><i class="fa-regular fa-bell"></i></div>
+      </div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <div class="label-tag" style="margin-bottom:8px;">🚀 Project Hub</div>
+          <h1 class="page-title">Collaborative Projects</h1>
+          <p class="page-subtitle">Build something amazing with skilled teammates</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" onclick="showToast('Import from GitHub (coming soon)','info')">
+            <i class="fa-brands fa-github"></i> Import
+          </button>
+          <button class="btn btn-primary" onclick="openModal('create-project-modal')">
+            <i class="fa-solid fa-plus"></i> New Project
+          </button>
+        </div>
+      </div>
+
+      <div class="page-content">
+
+        <!-- Hero / Summary -->
+        <div class="projects-hero fade-in">
+          <div>
+            <h2 style="font-size:22px;">Your Project Universe</h2>
+            <p style="color:var(--text-secondary);margin-top:6px;">Track, join, and build collaborative projects</p>
+          </div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;" class="summary-pills">
+            <div class="summary-pill">
+              <i class="fa-solid fa-circle" style="color:var(--accent-green);font-size:8px;"></i>
+              <span><strong id="active-count">4</strong> Active</span>
+            </div>
+            <div class="summary-pill">
+              <i class="fa-solid fa-circle" style="color:var(--accent-amber);font-size:8px;"></i>
+              <span><strong id="incomplete-count">2</strong> In Progress</span>
+            </div>
+            <div class="summary-pill">
+              <i class="fa-solid fa-diagram-project" style="color:var(--accent-cyan);font-size:12px;"></i>
+              <span><strong id="total-count">6</strong> Total Projects</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:24px;" class="fade-in stagger-1">
+          <div class="tabs">
+            <div class="tab active" data-tab="all">All Projects</div>
+            <div class="tab" data-tab="active">🟢 Active</div>
+            <div class="tab" data-tab="incomplete">🟡 In Progress</div>
+          </div>
+          <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="project-search" placeholder="Search projects…"
+                   oninput="filterProjectSearch(this.value)" />
+          </div>
+        </div>
+
+        <!-- All Projects Tab -->
+        <div class="tab-content active" id="tab-all">
+          <div class="grid grid-auto" id="all-grid">
+            <!-- Rendered by projects.js -->
+          </div>
+        </div>
+
+        <!-- Active Projects Tab -->
+        <div class="tab-content" id="tab-active">
+          <div class="grid grid-auto" id="active-grid">
+            <!-- Rendered by projects.js -->
+          </div>
+        </div>
+
+        <!-- Incomplete Projects Tab -->
+        <div class="tab-content" id="tab-incomplete">
+          <div style="background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.15);border-radius:var(--radius-lg);padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+            <i class="fa-solid fa-triangle-exclamation" style="color:var(--accent-amber);font-size:18px;"></i>
+            <div>
+              <div style="font-size:14px;font-weight:600;">These projects need attention</div>
+              <div style="font-size:13px;color:var(--text-muted);">Jump back in and pick up where you left off.</div>
+            </div>
+          </div>
+          <div class="grid grid-auto" id="incomplete-grid">
+            <!-- Rendered by projects.js -->
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ── Create Project Modal ── -->
+  <div class="modal-overlay" id="create-project-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Create New Project</h2>
+        <button class="modal-close" onclick="closeAllModals()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="create-project-form">
+        <div class="form-group">
+          <label class="form-label">Project Title *</label>
+          <input type="text" id="proj-title" class="form-input" placeholder="e.g. AI Resume Builder" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description *</label>
+          <textarea id="proj-desc" class="form-input" rows="4"
+                    placeholder="Describe your project goals, tech stack, and what kind of collaborators you need…"
+                    style="resize:vertical;min-height:100px;"></textarea>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group">
+            <label class="form-label">Primary Tag</label>
+            <select id="proj-tag" class="form-input" style="cursor:pointer;">
+              <option value="">Select category</option>
+              <option>Web3</option>
+              <option>React</option>
+              <option>Python</option>
+              <option>Mobile</option>
+              <option>ML / AI</option>
+              <option>DevOps</option>
+              <option>Security</option>
+              <option>Open Source</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Members</label>
+            <select class="form-input" style="cursor:pointer;">
+              <option>2–3 members</option>
+              <option>4–6 members</option>
+              <option>7–10 members</option>
+              <option>10+ members</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Skills Needed</label>
+          <input type="text" class="form-input" placeholder="e.g. React, Python, Figma (comma separated)" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Deadline</label>
+          <input type="date" class="form-input" />
+        </div>
+
+        <!-- Visibility -->
+        <div class="form-group">
+          <label class="form-label">Visibility</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <label style="cursor:pointer;">
+              <input type="radio" name="visibility" value="public" checked style="display:none;" />
+              <div class="card" style="padding:14px;border-color:rgba(0,229,255,0.3);cursor:pointer;"
+                   onclick="this.closest('label').querySelector('input').checked=true;this.style.borderColor='rgba(0,229,255,0.5)';">
+                <div style="font-size:18px;margin-bottom:4px;">🌍</div>
+                <div style="font-size:13px;font-weight:600;">Public</div>
+                <div style="font-size:12px;color:var(--text-muted);">Anyone can join</div>
+              </div>
+            </label>
+            <label style="cursor:pointer;">
+              <input type="radio" name="visibility" value="private" style="display:none;" />
+              <div class="card" style="padding:14px;cursor:pointer;"
+                   onclick="this.closest('label').querySelector('input').checked=true;this.style.borderColor='rgba(123,47,247,0.5)';">
+                <div style="font-size:18px;margin-bottom:4px;">🔒</div>
+                <div style="font-size:13px;font-weight:600;">Private</div>
+                <div style="font-size:12px;color:var(--text-muted);">Invite only</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:8px;">
+          <button type="button" class="btn btn-ghost btn-full" onclick="closeAllModals()">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-full">
+            <i class="fa-solid fa-rocket"></i> Launch Project
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Project Detail Modal ── -->
+  <div class="modal-overlay" id="project-detail-modal">
+    <div class="modal" style="max-width:580px;">
+      <div class="modal-header">
+        <div>
+          <div id="detail-status" class="badge badge-green" style="margin-bottom:8px;">
+            <i class="fa-solid fa-circle" style="font-size:7px;"></i> Active
+          </div>
+          <h2 class="modal-title" id="detail-title">Project Title</h2>
+        </div>
+        <button class="modal-close" onclick="closeAllModals()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <p style="color:var(--text-secondary);font-size:14px;line-height:1.6;margin-bottom:20px;" id="detail-desc"></p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;" id="detail-tags"></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+        <div style="background:var(--bg-glass);border:1px solid var(--border-dim);border-radius:var(--radius-md);padding:14px;text-align:center;">
+          <div style="font-size:20px;font-weight:800;font-family:var(--font-display);color:var(--accent-cyan);" id="detail-progress">0%</div>
+          <div style="font-size:12px;color:var(--text-muted);">Progress</div>
+        </div>
+        <div style="background:var(--bg-glass);border:1px solid var(--border-dim);border-radius:var(--radius-md);padding:14px;text-align:center;">
+          <div style="font-size:20px;font-weight:800;font-family:var(--font-display);color:var(--accent-amber);" id="detail-due">TBD</div>
+          <div style="font-size:12px;color:var(--text-muted);">Deadline</div>
+        </div>
+        <div style="background:var(--bg-glass);border:1px solid var(--border-dim);border-radius:var(--radius-md);padding:14px;text-align:center;">
+          <div style="font-size:20px;font-weight:800;font-family:var(--font-display);color:var(--accent-green);" id="detail-members">0</div>
+          <div style="font-size:12px;color:var(--text-muted);">Members</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <span style="font-size:13px;color:var(--text-muted);">Overall Progress</span>
+          <span style="font-size:13px;font-weight:600;color:var(--accent-cyan);" id="detail-progress-label"></span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="detail-progress-bar" style="width:0%;"></div>
+        </div>
+      </div>
+
+      <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.12);border-radius:var(--radius-md);padding:14px;margin-bottom:20px;">
+        <div style="font-size:13px;color:var(--text-secondary);">
+          <i class="fa-solid fa-circle-info" style="color:var(--accent-cyan);margin-right:8px;"></i>
+          Joining this project will cost <strong style="color:var(--accent-amber);">50 SKX</strong> as a commitment stake,
+          refunded upon milestone completion.
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;">
+        <button class="btn btn-ghost btn-full" onclick="closeAllModals()">Close</button>
+        <button class="btn btn-primary btn-full"
+                onclick="showToast('Joining project… 🚀','success');closeAllModals();">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Join Project
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/projects.js"></script>
+  <script>
+    // Live project search filter
+    function filterProjectSearch(query) {
+      const q = query.toLowerCase();
+      document.querySelectorAll('[id$="-grid"] .card').forEach(card => {
+        const title = card.querySelector('.project-title')?.textContent.toLowerCase() || '';
+        const desc  = card.querySelector('.project-desc')?.textContent.toLowerCase() || '';
+        card.style.display = (!q || title.includes(q) || desc.includes(q)) ? '' : 'none';
+      });
+    }
+
+    // Sync detail progress label
+    const origOpenDetail = window.openProjectDetail;
+    window.openProjectDetail = (id) => {
+      origOpenDetail(id);
+      const p = MOCK_DATA.projects.find(pr => pr.id === id);
+      if (p) {
+        const lbl = document.getElementById('detail-progress-label');
+        if (lbl) lbl.textContent = p.progress + '%';
+      }
+    };
+  </script>
+</body>
+</html>

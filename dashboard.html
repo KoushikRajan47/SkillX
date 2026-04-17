@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillX — Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .skill-level-bar { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-dim); }
+    .skill-level-bar:last-child { border-bottom: none; }
+    .skill-level-name { width: 100px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+    .skill-level-pct  { font-size: 12px; color: var(--text-muted); width: 36px; text-align: right; flex-shrink: 0; }
+
+    .donut-chart-wrap { display: flex; align-items: center; justify-content: center; gap: 32px; flex-wrap: wrap; }
+    .donut-legend { display: flex; flex-direction: column; gap: 10px; }
+    .donut-legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .donut-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    .project-mini { display: flex; align-items: center; gap: 14px; padding: 14px; border-bottom: 1px solid var(--border-dim); cursor: pointer; transition: var(--transition); border-radius: var(--radius-md); }
+    .project-mini:last-child { border-bottom: none; }
+    .project-mini:hover { background: var(--bg-glass); }
+    .project-mini-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .project-mini-info { flex: 1; min-width: 0; }
+    .project-mini-name { font-size: 14px; font-weight: 600; }
+    .project-mini-tag  { font-size: 12px; color: var(--text-muted); }
+    .project-mini-prog { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+
+    .greeting-time { font-size: 14px; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+  <div class="bg-orbs"></div>
+  <div class="bg-grid"></div>
+
+  <!-- Page Loader -->
+  <div class="page-loader">
+    <div class="brand-icon" style="width:52px;height:52px;border-radius:14px;font-size:24px;">⚡</div>
+    <div class="spinner"></div>
+  </div>
+
+  <div class="app-layout">
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <div class="brand-icon">⚡</div>
+          <div>
+            <div class="brand-name">SkillX</div>
+            <div class="brand-tagline">Skill Economy</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Main</span>
+        <a href="dashboard.html" class="nav-item active">
+          <i class="fa-solid fa-gauge-high"></i> Dashboard
+        </a>
+        <a href="skills.html" class="nav-item">
+          <i class="fa-solid fa-code-branch"></i> Skill Marketplace
+          <span class="nav-badge">8</span>
+        </a>
+        <a href="projects.html" class="nav-item">
+          <i class="fa-solid fa-diagram-project"></i> Project Hub
+          <span class="nav-badge">6</span>
+        </a>
+
+        <span class="nav-section-label">Account</span>
+        <a href="#" class="nav-item" onclick="showToast('Profile page coming soon 🛠️','info');return false;">
+          <i class="fa-regular fa-user"></i> My Profile
+        </a>
+        <a href="#" class="nav-item" onclick="showToast('Wallet page coming soon 🛠️','info');return false;">
+          <i class="fa-solid fa-wallet"></i> SKX Wallet
+        </a>
+        <a href="#" class="nav-item" onclick="showToast('Notifications coming soon 🛠️','info');return false;">
+          <i class="fa-regular fa-bell"></i> Notifications
+          <span class="nav-badge">3</span>
+        </a>
+
+        <span class="nav-section-label">System</span>
+        <a href="#" class="nav-item" onclick="showToast('Settings coming soon 🛠️','info');return false;">
+          <i class="fa-solid fa-sliders"></i> Settings
+        </a>
+        <a href="index.html" class="nav-item" onclick="sessionStorage.clear();">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" id="sidebar-avatar" style="background:var(--grad-primary);">AR</div>
+          <div class="user-info">
+            <div class="user-name" id="sidebar-name">Alex Rivera</div>
+            <div class="user-role" id="sidebar-role">Full-Stack Dev</div>
+          </div>
+          <i class="fa-solid fa-ellipsis user-arrow"></i>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- ── Main Content ── -->
+    <main class="main-content">
+      <!-- Mobile topbar -->
+      <div class="mobile-topbar">
+        <button class="hamburger"><i class="fa-solid fa-bars"></i></button>
+        <div class="brand-logo">
+          <div class="brand-icon" style="width:30px;height:30px;font-size:14px;border-radius:8px;">⚡</div>
+          <span class="brand-name" style="font-size:16px;">SkillX</span>
+        </div>
+        <div class="icon-btn"><i class="fa-regular fa-bell"></i></div>
+      </div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <div class="greeting-time" id="greeting-time">Good morning ☀️</div>
+          <h1 class="page-title">Dashboard <span id="welcome-name" style="background:var(--grad-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;"></span></h1>
+          <p class="page-subtitle">Here's what's happening in your skill economy today</p>
+        </div>
+        <div class="topbar-actions">
+          <div style="display:flex;align-items:center;gap:8px;background:rgba(255,170,0,0.1);border:1px solid rgba(255,170,0,0.2);border-radius:var(--radius-full);padding:8px 16px;">
+            <i class="fa-solid fa-coins" style="color:var(--accent-amber);"></i>
+            <span id="user-tokens" style="font-weight:700;color:var(--accent-amber);">340 SKX</span>
+          </div>
+          <div class="icon-btn" style="position:relative;">
+            <i class="fa-regular fa-bell"></i>
+            <div class="notif-dot" style="position:absolute;top:8px;right:8px;width:6px;height:6px;"></div>
+          </div>
+          <div class="icon-btn" onclick="showToast('Search feature coming soon','info')">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-content">
+
+        <!-- Welcome Banner -->
+        <div class="welcome-banner fade-in">
+          <div class="welcome-text">
+            <h2>🏆 You're ranked <span class="gradient-text">#23</span> this week!</h2>
+            <p>Complete 2 more skill exchanges to reach the Top 10 leaderboard.</p>
+          </div>
+          <div class="welcome-actions">
+            <div class="xp-badge">
+              <i class="fa-solid fa-star" style="color:var(--accent-amber);"></i>
+              <span id="user-xp">2,480 XP</span>
+            </div>
+            <a href="skills.html" class="btn btn-primary">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i> Exchange Skills
+            </a>
+          </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="grid grid-4 fade-in stagger-1" style="margin-bottom:32px;">
+          <div class="card stat-card">
+            <div class="stat-icon" style="background:rgba(123,47,247,0.15);color:#a570ff;">
+              <i class="fa-solid fa-code-branch"></i>
+            </div>
+            <div class="stat-value gradient-text" id="stat-skills">5</div>
+            <div class="stat-label">Active Skills</div>
+            <div class="stat-delta up"><i class="fa-solid fa-arrow-trend-up"></i> +2 this month</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon" style="background:rgba(0,229,255,0.1);color:var(--accent-cyan);">
+              <i class="fa-solid fa-diagram-project"></i>
+            </div>
+            <div class="stat-value" style="color:var(--accent-cyan);" id="stat-projects">4</div>
+            <div class="stat-label">Active Projects</div>
+            <div class="stat-delta up"><i class="fa-solid fa-arrow-trend-up"></i> Joined 2 new</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon" style="background:rgba(0,255,136,0.08);color:var(--accent-green);">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="stat-value" style="color:var(--accent-green);" id="stat-teammates">18</div>
+            <div class="stat-label">Connections</div>
+            <div class="stat-delta up"><i class="fa-solid fa-arrow-trend-up"></i> +5 this week</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-icon" style="background:rgba(255,170,0,0.12);color:var(--accent-amber);">
+              <i class="fa-solid fa-coins"></i>
+            </div>
+            <div class="stat-value" style="color:var(--accent-amber);" id="stat-tokens">340</div>
+            <div class="stat-label">SKX Tokens</div>
+            <div class="stat-delta up"><i class="fa-solid fa-arrow-trend-up"></i> +130 earned</div>
+          </div>
+        </div>
+
+        <!-- Main 2-column grid -->
+        <div style="display:grid;grid-template-columns:1fr 380px;gap:24px;" class="dash-main-grid">
+
+          <!-- Left Column -->
+          <div style="display:flex;flex-direction:column;gap:24px;">
+
+            <!-- Active Projects mini -->
+            <div class="card fade-in stagger-2">
+              <div class="card-header">
+                <div class="section-header">
+                  <h3 class="section-title">Active Projects</h3>
+                  <a href="projects.html" class="section-action">View all <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top:8px;" id="projects-mini-list">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+            <!-- Skill Proficiency -->
+            <div class="card fade-in stagger-3">
+              <div class="card-header">
+                <div class="section-header">
+                  <h3 class="section-title">Skill Proficiency</h3>
+                  <span class="label-tag">⚡ Level Pro</span>
+                </div>
+              </div>
+              <div class="card-body" id="skill-bars">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Column -->
+          <div style="display:flex;flex-direction:column;gap:24px;">
+
+            <!-- Suggested Teammates -->
+            <div class="card fade-in stagger-2">
+              <div class="card-header">
+                <div class="section-header">
+                  <h3 class="section-title">Suggested Teammates</h3>
+                  <a href="skills.html" class="section-action">See all</a>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top:0;display:flex;flex-direction:column;gap:0;" id="teammates-list">
+                <!-- Rendered by exchange.js -->
+              </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card fade-in stagger-3">
+              <div class="card-header">
+                <div class="section-header">
+                  <h3 class="section-title">Recent Activity</h3>
+                  <div class="notif-dot"></div>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top:0;" id="activity-feed">
+                <!-- Rendered by exchange.js -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/exchange.js"></script>
+  <script>
+    // ── Auth guard ──
+    const storedUser = sessionStorage.getItem('skillx_user');
+    if (!storedUser && !location.search.includes('demo')) {
+      // Allow demo mode without login for judges
+      // window.location.href = 'index.html';
+    }
+
+    // ── Greeting ──
+    const hour = new Date().getHours();
+    const greetMap = [
+      [5,  'Good morning ☀️'],
+      [12, 'Good morning ☀️'],
+      [17, 'Good afternoon 🌤️'],
+      [21, 'Good evening 🌙'],
+      [24, 'Late night grind 🌙']
+    ];
+    document.getElementById('greeting-time').textContent =
+      greetMap.find(([h]) => hour < h)?.[1] || 'Hello 👋';
+
+    // ── Sidebar user info ──
+    const u = JSON.parse(storedUser || '{}');
+    if (u.name) {
+      document.getElementById('sidebar-name').textContent = u.name;
+      document.getElementById('sidebar-avatar').textContent = u.avatar || u.name.slice(0,2).toUpperCase();
+      document.getElementById('sidebar-role').textContent = u.role || 'Developer';
+    }
+
+    // ── Projects Mini ──
+    const icons = ['🚀','🤖','📱','🛡️','🔧','🎮'];
+    const iconBgs = [
+      'rgba(123,47,247,0.15)','rgba(0,229,255,0.1)',
+      'rgba(0,255,136,0.08)', 'rgba(255,45,120,0.1)',
+      'rgba(255,170,0,0.12)', 'rgba(123,47,247,0.12)'
+    ];
+    const activeProjects = MOCK_DATA.projects.filter(p => p.status === 'active');
+    document.getElementById('projects-mini-list').innerHTML = activeProjects.map((p, i) => `
+      <div class="project-mini" onclick="window.location.href='projects.html'">
+        <div class="project-mini-icon" style="background:${iconBgs[i % iconBgs.length]};">
+          ${icons[i % icons.length]}
+        </div>
+        <div class="project-mini-info">
+          <div class="project-mini-name">${p.title}</div>
+          <div class="project-mini-tag">${p.tags[0]} · ${p.members} members</div>
+        </div>
+        <div class="project-mini-prog">
+          <span style="font-size:13px;font-weight:700;color:var(--accent-cyan);">${p.progress}%</span>
+          <div class="progress-bar" style="width:64px;">
+            <div class="progress-fill" style="width:${p.progress}%;"></div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // ── Skill Bars ──
+    const skills = [
+      { name: 'React',   pct: 95, color: 'var(--accent-cyan)'   },
+      { name: 'Node.js', pct: 88, color: 'var(--accent-violet)' },
+      { name: 'Python',  pct: 82, color: 'var(--accent-green)'  },
+      { name: 'AWS',     pct: 74, color: 'var(--accent-amber)'  },
+      { name: 'GraphQL', pct: 68, color: 'var(--accent-pink)'   },
+    ];
+    document.getElementById('skill-bars').innerHTML = skills.map(s => `
+      <div class="skill-level-bar">
+        <span class="skill-level-name">${s.name}</span>
+        <div class="progress-bar" style="flex:1;">
+          <div class="progress-fill" style="width:${s.pct}%;background:${s.color};"></div>
+        </div>
+        <span class="skill-level-pct">${s.pct}%</span>
+      </div>
+    `).join('');
+
+    // Responsive grid
+    const mq = window.matchMedia('(max-width:900px)');
+    const applyGrid = () => {
+      const el = document.querySelector('.dash-main-grid');
+      if (el) el.style.gridTemplateColumns = mq.matches ? '1fr' : '1fr 380px';
+    };
+    applyGrid();
+    mq.addEventListener('change', applyGrid);
+  </script>
+</body>
+</html>

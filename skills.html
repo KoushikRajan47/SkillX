@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillX — Skill Marketplace</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .marketplace-hero {
+      background: linear-gradient(135deg, rgba(123,47,247,0.15), rgba(0,229,255,0.06));
+      border: 1px solid rgba(123,47,247,0.15);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      margin-bottom: 28px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;
+      position: relative; overflow: hidden;
+    }
+    .marketplace-hero::after {
+      content: '🔄';
+      position: absolute; right: 32px; top: 50%; transform: translateY(-50%);
+      font-size: 80px; opacity: 0.08;
+    }
+
+    .sort-select {
+      background: var(--bg-glass); border: 1px solid var(--border-dim);
+      color: var(--text-primary); border-radius: var(--radius-md);
+      padding: 10px 16px; font-size: 13px; cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236666aa' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+    }
+    .sort-select:focus { outline: none; border-color: var(--border-glow); }
+
+    .online-indicator {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--accent-green); font-weight: 500;
+    }
+    .online-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 6px var(--accent-green);
+      animation: pulse 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-orbs"></div>
+  <div class="bg-grid"></div>
+
+  <!-- Page Loader -->
+  <div class="page-loader">
+    <div class="brand-icon" style="width:52px;height:52px;border-radius:14px;font-size:24px;">⚡</div>
+    <div class="spinner"></div>
+  </div>
+
+  <div class="app-layout">
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <div class="brand-icon">⚡</div>
+          <div>
+            <div class="brand-name">SkillX</div>
+            <div class="brand-tagline">Skill Economy</div>
+          </div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <span class="nav-section-label">Main</span>
+        <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <a href="skills.html" class="nav-item active"><i class="fa-solid fa-code-branch"></i> Skill Marketplace<span class="nav-badge">8</span></a>
+        <a href="projects.html" class="nav-item"><i class="fa-solid fa-diagram-project"></i> Project Hub<span class="nav-badge">6</span></a>
+        <span class="nav-section-label">Account</span>
+        <a href="#" class="nav-item" onclick="showToast('Coming soon 🛠️','info');return false;"><i class="fa-regular fa-user"></i> My Profile</a>
+        <a href="#" class="nav-item" onclick="showToast('Coming soon 🛠️','info');return false;"><i class="fa-solid fa-wallet"></i> SKX Wallet</a>
+        <a href="#" class="nav-item" onclick="showToast('Coming soon 🛠️','info');return false;"><i class="fa-regular fa-bell"></i> Notifications<span class="nav-badge">3</span></a>
+        <span class="nav-section-label">System</span>
+        <a href="#" class="nav-item" onclick="showToast('Coming soon 🛠️','info');return false;"><i class="fa-solid fa-sliders"></i> Settings</a>
+        <a href="index.html" class="nav-item" onclick="sessionStorage.clear();"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" style="background:var(--grad-primary);">AR</div>
+          <div class="user-info">
+            <div class="user-name">Alex Rivera</div>
+            <div class="user-role">Full-Stack Dev</div>
+          </div>
+          <i class="fa-solid fa-ellipsis user-arrow"></i>
+        </div>
+      </div>
+    </aside>
+    <div class="sidebar-overlay"></div>
+
+    <!-- ── Main Content ── -->
+    <main class="main-content">
+      <div class="mobile-topbar">
+        <button class="hamburger"><i class="fa-solid fa-bars"></i></button>
+        <div class="brand-logo">
+          <div class="brand-icon" style="width:30px;height:30px;font-size:14px;border-radius:8px;">⚡</div>
+          <span class="brand-name" style="font-size:16px;">SkillX</span>
+        </div>
+        <div class="icon-btn"><i class="fa-regular fa-bell"></i></div>
+      </div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <div class="label-tag" style="margin-bottom:8px;">🔄 Live Exchange</div>
+          <h1 class="page-title">Skill Marketplace</h1>
+          <p class="page-subtitle">Connect, exchange skills, and grow together</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="online-indicator">
+            <span class="online-dot"></span>
+            <span id="online-count">4 online now</span>
+          </div>
+          <button class="btn btn-primary" onclick="showToast('Post your skill (coming soon)','info')">
+            <i class="fa-solid fa-plus"></i> Post a Skill
+          </button>
+        </div>
+      </div>
+
+      <div class="page-content">
+
+        <!-- Hero Banner -->
+        <div class="marketplace-hero fade-in">
+          <div>
+            <h2 style="font-size:22px;">Find Your Perfect Collaborator</h2>
+            <p style="color:var(--text-secondary);margin-top:6px;">
+              Browse <strong style="color:var(--text-primary);" id="skills-count">8 developers</strong>
+              ready to exchange skills
+            </p>
+          </div>
+          <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+            <div style="text-align:center;">
+              <div style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--accent-cyan);">247</div>
+              <div style="font-size:12px;color:var(--text-muted);">Exchanges Today</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--accent-violet);">98%</div>
+              <div style="font-size:12px;color:var(--text-muted);">Satisfaction</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-family:var(--font-display);font-size:24px;font-weight:800;color:var(--accent-green);">3.2s</div>
+              <div style="font-size:12px;color:var(--text-muted);">Avg Match Time</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:24px;" class="fade-in stagger-1">
+          <div class="filter-bar" style="padding:0;">
+            <button class="filter-chip active" data-filter="all">All Skills</button>
+            <button class="filter-chip" data-filter="dev">💻 Development</button>
+            <button class="filter-chip" data-filter="design">🎨 Design</button>
+            <button class="filter-chip" data-filter="ml">🤖 ML / AI</button>
+            <button class="filter-chip" data-filter="web3">⛓️ Web3</button>
+            <button class="filter-chip" data-filter="devops">🐳 DevOps</button>
+            <button class="filter-chip" data-filter="security">🛡️ Security</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div class="search-bar">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="skill-search" placeholder="Search skills or people…" />
+            </div>
+            <select class="sort-select" id="skill-sort" onchange="sortSkills(this.value)">
+              <option value="rating">Top Rated</option>
+              <option value="exchanges">Most Exchanges</option>
+              <option value="tokens">Most Tokens</option>
+              <option value="online">Online First</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Skills Grid -->
+        <div class="grid grid-auto" id="skills-grid">
+          <!-- Rendered by skills.js -->
+        </div>
+
+        <!-- Empty State (hidden by default) -->
+        <div id="skills-empty" class="empty-state" style="display:none;">
+          <div class="empty-state-icon">🔍</div>
+          <h3>No Results Found</h3>
+          <p>Try a different skill, filter, or search term to find collaborators.</p>
+          <button class="btn btn-ghost btn-sm"
+                  onclick="document.getElementById('skill-search').value='';renderSkillCards();">
+            Clear Search
+          </button>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ── Request Exchange Modal ── -->
+  <div class="modal-overlay" id="request-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Request Skill Exchange</h2>
+        <button class="modal-close" onclick="closeAllModals()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- User info -->
+      <div style="display:flex;align-items:center;gap:14px;padding:20px;background:var(--bg-glass);border:1px solid var(--border-dim);border-radius:var(--radius-lg);margin-bottom:24px;">
+        <div class="avatar avatar-lg" id="modal-user-avatar">MC</div>
+        <div>
+          <div style="font-weight:700;font-size:16px;" id="modal-user-name">Maya Chen</div>
+          <div style="color:var(--text-muted);font-size:13px;" id="modal-user-title">UI/UX Designer</div>
+        </div>
+        <div style="margin-left:auto;">
+          <span class="badge badge-green">
+            <span style="width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;"></span>
+            Online
+          </span>
+        </div>
+      </div>
+
+      <form id="exchange-request-form">
+        <input type="hidden" id="modal-request-id" />
+
+        <div class="form-group">
+          <label class="form-label">Skill You're Offering</label>
+          <div class="input-icon-wrap">
+            <i class="fa-solid fa-code input-icon"></i>
+            <select id="offered-skill" class="form-input" style="padding-left:46px;cursor:pointer;">
+              <!-- Populated by JS -->
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Skill You Want in Return</label>
+          <div class="input-icon-wrap">
+            <i class="fa-solid fa-wand-magic-sparkles input-icon"></i>
+            <input type="text" class="form-input" placeholder="e.g. Figma, UI Design, Framer…" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Session Duration</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+            <label style="cursor:pointer;">
+              <input type="radio" name="duration" value="30" style="display:none;" />
+              <div class="filter-chip" style="text-align:center;cursor:pointer;"
+                   onclick="this.closest('label').querySelector('input').checked=true;this.classList.add('active');this.closest('.form-group').querySelectorAll('.filter-chip').forEach(c=>{if(c!==this)c.classList.remove('active')});">
+                30 min
+              </div>
+            </label>
+            <label style="cursor:pointer;">
+              <input type="radio" name="duration" value="60" style="display:none;" checked />
+              <div class="filter-chip active" style="text-align:center;cursor:pointer;"
+                   onclick="this.closest('label').querySelector('input').checked=true;this.classList.add('active');this.closest('.form-group').querySelectorAll('.filter-chip').forEach(c=>{if(c!==this)c.classList.remove('active')});">
+                1 hour
+              </div>
+            </label>
+            <label style="cursor:pointer;">
+              <input type="radio" name="duration" value="120" style="display:none;" />
+              <div class="filter-chip" style="text-align:center;cursor:pointer;"
+                   onclick="this.closest('label').querySelector('input').checked=true;this.classList.add('active');this.closest('.form-group').querySelectorAll('.filter-chip').forEach(c=>{if(c!==this)c.classList.remove('active')});">
+                2 hours
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Message (optional)</label>
+          <textarea class="form-input" rows="3"
+                    placeholder="Hey! I'd love to exchange skills. I can help with React performance optimization…"
+                    style="resize:vertical;min-height:80px;"></textarea>
+        </div>
+
+        <!-- Token estimate -->
+        <div style="background:rgba(255,170,0,0.08);border:1px solid rgba(255,170,0,0.15);border-radius:var(--radius-md);padding:14px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+          <i class="fa-solid fa-coins" style="color:var(--accent-amber);"></i>
+          <span style="font-size:13px;color:var(--text-secondary);">
+            This exchange will use <strong style="color:var(--accent-amber);">~15 SKX</strong> from your wallet
+          </span>
+        </div>
+
+        <div style="display:flex;gap:12px;">
+          <button type="button" class="btn btn-ghost btn-full" onclick="closeAllModals()">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-full">
+            <i class="fa-solid fa-paper-plane"></i> Send Request
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/skills.js"></script>
+  <script>
+    function sortSkills(by) {
+      showToast(`Sorted by ${by} ✓`, 'info');
+      if (by === 'rating')    MOCK_DATA.skills.sort((a,b) => b.rating    - a.rating);
+      if (by === 'exchanges') MOCK_DATA.skills.sort((a,b) => b.exchanges - a.exchanges);
+      if (by === 'tokens')    MOCK_DATA.skills.sort((a,b) => b.tokens    - a.tokens);
+      if (by === 'online')    MOCK_DATA.skills.sort((a,b) => b.online - a.online);
+      const filter = document.querySelector('.filter-chip.active')?.dataset.filter || 'all';
+      renderSkillCards(filter, document.getElementById('skill-search')?.value || '');
+    }
+
+    // Online count animation
+    let onlineCount = 4;
+    setInterval(() => {
+      onlineCount = Math.max(2, Math.min(8, onlineCount + (Math.random() > 0.5 ? 1 : -1)));
+      const el = document.getElementById('online-count');
+      if (el) el.textContent = `${onlineCount} online now`;
+    }, 5000);
+  </script>
+</body>
+</html>
